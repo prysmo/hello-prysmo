@@ -1,0 +1,16 @@
+{
+    "name": "hello-prysmo",
+    "description": "A dummy API Gateway built with prysmo to allow clients to test communications and protocol.",
+    "version": "0.0.0",
+    "main": "./lib/main.js",
+    "license": "MIT",
+    "homepage": "https://gitlab.com/prysmo/hello-prysmo#readme",
+    "bugs": {
+        "url": "https://gitlab.com/prysmo/hello-prysmo/issues",
+        "email": "prysmo@protonmail.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://gitlab.com/prysmo/hello-prysmo.git"
+    }
+}
