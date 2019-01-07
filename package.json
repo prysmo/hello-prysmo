@@ -4,6 +4,13 @@
     "version": "0.0.0",
     "main": "./lib/main.js",
     "license": "MIT",
+    "scripts": {
+        "test": "mocha -b --no-diff test/spec.js",
+        "coverage": "nyc -r html mocha -b --no-diff test/spec.js"
+    },
+    "devDependencies": {
+        "wtfnode": "^0.8.0"
+    },
     "homepage": "https://gitlab.com/prysmo/hello-prysmo#readme",
     "bugs": {
         "url": "https://gitlab.com/prysmo/hello-prysmo/issues",
