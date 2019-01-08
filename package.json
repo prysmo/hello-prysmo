@@ -1,7 +1,7 @@
 {
     "name": "hello-prysmo",
     "description": "A dummy API Gateway built with prysmo to allow clients to test communications and protocol.",
-    "version": "0.0.0",
+    "version": "0.0.1",
     "main": "./lib/main.js",
     "license": "MIT",
     "scripts": {

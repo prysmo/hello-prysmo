@@ -1,6 +1,12 @@
 stages:
   - test
   - check
+  - publish
+
+# Cache previous version os modules to speed up dependencies.
+cache:
+  paths:
+    - node_modules/
 
 # Lint js files.
 lint-js:
@@ -43,3 +49,15 @@ code_quality:
         "registry.gitlab.com/gitlab-org/security-products/codequality:$SP_VERSION" /code
   artifacts:
     paths: [gl-code-quality-report.json]
+
+# Publish the package to npmjs.
+npm-publish:
+  stage: publish
+  image: node
+  only:
+    - tags
+    - web
+    - /^v\d+\.\d+\.\d+$/
+  script:
+    - echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > .npmrc
+    - npm publish
