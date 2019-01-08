@@ -5,12 +5,15 @@
     "main": "./lib/main.js",
     "license": "MIT",
     "scripts": {
+        "start": "node bin/hello-prysmo.js",
         "test": "mocha -b --no-diff test/spec.js",
         "coverage": "nyc -r html mocha -b --no-diff test/spec.js"
     },
     "dependencies": {
+        "cli": "^1.0.1",
         "merge-deep": "^3.0.2",
-        "prysmo": "0.0.2"
+        "prysmo": "0.0.2",
+        "toml": "^2.3.5"
     },
     "devDependencies": {
         "wtfnode": "^0.8.0"
@@ -23,5 +26,8 @@
     "repository": {
         "type": "git",
         "url": "https://gitlab.com/prysmo/hello-prysmo.git"
+    },
+    "bin": {
+        "hello-prysmo": "./bin/hello-prysmo.js"
     }
 }
