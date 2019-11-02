@@ -1,12 +1,15 @@
 stages:
   - test
-  - check
-  - publish
+  - deploy
 
-# Cache previous version os modules to speed up dependencies.
-cache:
-  paths:
-    - node_modules/
+include:
+  - template: Dependency-Scanning.gitlab-ci.yml
+  - template: SAST.gitlab-ci.yml
+  - template: Code-Quality.gitlab-ci.yml
+
+sast:
+  variables:
+    SAST_EXCLUDED_PATHS: test/**
 
 # Lint js files.
 lint-js:
@@ -21,43 +24,29 @@ lint-js:
 # Performs unit testing.
 unit-test:
   coverage: '/Statements\s*:\s*(\d+(?:\.\d+)?\%)/'
-  image: node
+  image: registry.gitlab.com/gcsboss/docker-mocha-nyc:0.1.0-alpine
   stage: test
+  artifacts:
+    paths: [coverage]
   tags:
     - docker
   script:
-    - npm i -g mocha
-    - npm i -g nyc
-    - npm i .
-    - nyc --reporter=text-summary npm t
-
-# Analyse code quality.
-code_quality:
-  stage: check
-  image: docker:stable
-  variables:
-    DOCKER_DRIVER: overlay2
-  allow_failure: true
-  services:
-    - docker:stable-dind
-  script:
-    - export SP_VERSION=$(echo "$CI_SERVER_VERSION" | sed 's/^\([0-9]*\)\.\([0-9]*\).*/\1-\2-stable/')
-    - docker run
-        --env SOURCE_CODE="$PWD"
-        --volume "$PWD":/code
-        --volume /var/run/docker.sock:/var/run/docker.sock
-        "registry.gitlab.com/gitlab-org/security-products/codequality:$SP_VERSION" /code
-  artifacts:
-    paths: [gl-code-quality-report.json]
+    - npm i --no-optional .
+    - npm run-script coverage
 
 # Publish the package to npmjs.
-npm-publish:
-  stage: publish
+publish:
+  stage: deploy
   image: node
+  tags:
+    - docker
   only:
     - tags
-    - web
-    - /^v\d+\.\d+\.\d+$/
+    - triggers
+  except:
+    variables:
+      - $CI_COMMIT_TAG =~ /beta/
   script:
-    - echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > .npmrc
+    - npm install -g npm-cli-login
+    - npm-cli-login
     - npm publish
